@@ -140,7 +140,7 @@ public class WK_Character : MonoBehaviour {
 
 //		tr.position = Vector3.Lerp(lastSyncData.position, syncData.Peek().position, currentSyncLerpAlpha);
 
-		rb.MoveRotation( rb.rotation * Quaternion.Slerp(lastSyncData.rotation, syncData.Peek().rotation, currentSyncLerpAlpha));
+		rb.MoveRotation( Quaternion.Inverse(rb.rotation) * Quaternion.Slerp(lastSyncData.rotation, syncData.Peek().rotation, currentSyncLerpAlpha));
 
 		targetSyncPosition = Vector3.Lerp(lastSyncData.position, syncData.Peek().position, currentSyncLerpAlpha);
 		rb.velocity = (targetSyncPosition - tr.position) / Time.deltaTime;
