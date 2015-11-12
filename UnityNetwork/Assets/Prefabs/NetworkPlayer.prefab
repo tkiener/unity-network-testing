@@ -10,6 +10,7 @@ GameObject:
   - 4: {fileID: 469548}
   - 114: {fileID: 11415000}
   - 114: {fileID: 11475678}
+  - 114: {fileID: 11481272}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Untagged
@@ -74,8 +75,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterObjectPrefab: {fileID: 152144, guid: 318b6d1b7a8b041c7ab99d614059ac4d,
     type: 2}
-  positionsPerSecond: 20
+--- !u!114 &11481272
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 127032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4edd26dc5e1f54b0a96ff1fef0c11396, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  positionsPerSecond: 10
   syncsPerSecond: 10
+  dataLossPercent: 0
+  savedSyncTimes: 20
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -90,6 +104,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: positionsPerSecond
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: dataLossPercent
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

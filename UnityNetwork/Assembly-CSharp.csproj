@@ -49,6 +49,8 @@
      <Compile Include="Assets\Scripts\Debug_Carussel.cs" />
      <Compile Include="Assets\Scripts\WK_Character.cs" />
      <Compile Include="Assets\Scripts\WK_NetworkPlayer.cs" />
+     <Compile Include="Assets\Scripts\WK_NetworkSyncBody.cs" />
+     <Compile Include="Assets\Scripts\WK_NetworkSyncProcessor.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
