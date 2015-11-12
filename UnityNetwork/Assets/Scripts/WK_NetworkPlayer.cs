@@ -15,7 +15,6 @@ public class WK_NetworkPlayer : NetworkBehaviour {
 		character = Instantiate<GameObject>(characterObjectPrefab).GetComponent<WK_Character>();
 
 		GetComponent<WK_NetworkSyncProcessor>().StartSyncing(character.GetComponent<WK_NetworkSyncBody>());
-		character.Init(isLocalPlayer);
 	}
 
 	public override void OnStartLocalPlayer ()
