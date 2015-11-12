@@ -74,7 +74,7 @@ public class WK_Character : MonoBehaviour {
 
 		timeSinceLastDataSync = 0;
 		estimatedTimeUntilNextSync = syncTime * 1.2f;
-		timePerSyncPoint = estimatedTimeUntilNextSync / (syncData.Count + 1 - currentSyncLerpAlpha);
+		timePerSyncPoint = estimatedTimeUntilNextSync / (syncData.Count - currentSyncLerpAlpha);
 
 
 		Debug.Log("Received message ID: " + id + " with syncTime: " + syncTime);
