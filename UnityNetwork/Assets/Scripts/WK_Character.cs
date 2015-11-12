@@ -108,6 +108,7 @@ public class WK_Character : MonoBehaviour {
 
 		if (syncData.Count == 0)
 		{
+			Debug.LogWarning("Reached final point: timeSinceLastDataSync " + timeSinceLastDataSync + " / estimatedTimeUntilNextSync " + estimatedTimeUntilNextSync);
 			currentSyncLerpAlpha = 0;
 			tr.position = lastSyncData.position;
 			rb.velocity = Vector3.zero;
