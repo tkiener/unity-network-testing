@@ -397,6 +397,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b414f36e6c9c8420b8f60780e9de8b21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotationSpeed: 20
 --- !u!1 &1009316531
 GameObject:
   m_ObjectHideFlags: 0
@@ -491,9 +492,9 @@ MonoBehaviour:
     m_Channels: []
   m_Channels: 050000000000000002000000
   m_UseWebSockets: 0
-  m_UseSimulator: 0
+  m_UseSimulator: 1
   m_SimulatedLatency: 50
-  m_PacketLossPercentage: 5
+  m_PacketLossPercentage: 10
   m_MatchHost: mm.unet.unity3d.com
   m_MatchPort: 443
   isNetworkActive: 0

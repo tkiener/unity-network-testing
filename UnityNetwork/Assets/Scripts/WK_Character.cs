@@ -91,9 +91,9 @@ public class WK_Character : MonoBehaviour {
 
 		timeSinceLastDataSync = 0;
 		estimatedTimeUntilNextSync = syncTime * 1.2f;
-		timePerSyncPoint = estimatedTimeUntilNextSync / (syncData.Count - currentSyncLerpAlpha);
+//		timePerSyncPoint = estimatedTimeUntilNextSync / (syncData.Count - currentSyncLerpAlpha);
 
-		originalNeededTime = time[time.Length-1] - lastSyncData.time;
+		originalNeededTime = time[time.Length-1] - Mathf.Lerp(lastSyncData.time, syncData.Peek().time, currentSyncLerpAlpha);
 		timePerSyncPoint = estimatedTimeUntilNextSync / originalNeededTime * (syncData.Peek().time - lastSyncData.time);
 		
 		if (id <= lastID)
