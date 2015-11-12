@@ -25,15 +25,19 @@ public class WK_Character : MonoBehaviour {
 	bool isLocalPlayer;
 
 	Transform tr;
+	Rigidbody rb;
 
 	void Awake ()
 	{
 		tr = transform;
+		rb = GetComponent<Rigidbody>();
 	}
 
 	public void Init (bool isLocalPlayer)
 	{
-		GetComponent<Rigidbody>().isKinematic = !isLocalPlayer;
+//		GetComponent<Rigidbody>().isKinematic = !isLocalPlayer;
+		rb.isKinematic = false;
+		rb.useGravity = isLocalPlayer;
 
 		this.isLocalPlayer = isLocalPlayer;
 		if (isLocalPlayer)
@@ -46,7 +50,7 @@ public class WK_Character : MonoBehaviour {
 	}
 
 
-	void Update ()
+	void FixedUpdate ()
 	{
 		if (!isLocalPlayer)
 			UpdateSyncPos();
@@ -83,6 +87,7 @@ public class WK_Character : MonoBehaviour {
 
 	SyncData lastSyncData;
 	float currentSyncLerpAlpha = 0;
+	Vector3 targetSyncPosition;
 	void UpdateSyncPos()
 	{
 		if (lastSyncData == null)
@@ -103,12 +108,15 @@ public class WK_Character : MonoBehaviour {
 
 		if (syncData.Count == 0)
 		{
-			currentSyncLerpAlpha = 1;
+			currentSyncLerpAlpha = 0;
 			tr.position = lastSyncData.position;
 			return;
 		}
 
-		tr.position = Vector3.Lerp(lastSyncData.position, syncData.Peek().position, currentSyncLerpAlpha);
+//		tr.position = Vector3.Lerp(lastSyncData.position, syncData.Peek().position, currentSyncLerpAlpha);
+
+		targetSyncPosition = Vector3.Lerp(lastSyncData.position, syncData.Peek().position, currentSyncLerpAlpha);
+		rb.velocity = (targetSyncPosition - tr.position) / Time.deltaTime;
 	}
 
 	void OnDrawGizmos ()

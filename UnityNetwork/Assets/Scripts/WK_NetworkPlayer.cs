@@ -36,6 +36,7 @@ public class WK_NetworkPlayer : NetworkBehaviour {
 	int id = 0;
 
 	[SerializeField] float positionsPerSecond = 10;
+	[SerializeField] float syncsPerSecond = 10;
 	IEnumerator SavePositionDataCo ()
 	{
 		while (true)
@@ -49,7 +50,7 @@ public class WK_NetworkPlayer : NetworkBehaviour {
 	{
 		while (true)
 		{
-			yield return new WaitForSeconds(2f);
+			yield return new WaitForSeconds(1f/syncsPerSecond);
 
 			if (positionData.Count == 0)
 				continue;
