@@ -33,6 +33,8 @@ public class WK_NetworkPlayer : NetworkBehaviour {
 	//_________POSITION SYNCING
 
 	List<Vector3> positionData = new List<Vector3>();
+	List<Quaternion> rotationData = new List<Quaternion>();
+	List<float> timeData = new List<float>();
 	int id = 0;
 
 	[SerializeField] float positionsPerSecond = 10;
@@ -43,6 +45,8 @@ public class WK_NetworkPlayer : NetworkBehaviour {
 		{
 			yield return new WaitForSeconds(1f/positionsPerSecond);
 			positionData.Add(character.position);
+			rotationData.Add(character.rotation);
+			timeData.Add(Time.timeSinceLevelLoad);
 		}
 	}
 
@@ -55,33 +59,32 @@ public class WK_NetworkPlayer : NetworkBehaviour {
 			if (positionData.Count == 0)
 				continue;
 
-			SyncPositionData(positionData.ToArray(), id++);
+			SyncPositionData(positionData.ToArray(), rotationData.ToArray(), timeData.ToArray(), id++);
 			positionData.Clear();
+			rotationData.Clear();
+			timeData.Clear();
 		}
 	}
 
 
-	void SyncPositionData (Vector3[] pos, int id)
+	void SyncPositionData (Vector3[] pos, Quaternion[] rot, float[] time, int id)
 	{
-//		if (!isServer)
-			Cmd_SyncPositionData(pos, id);
-//		else
-//			Rpc_SnycPositionData(pos, id);
+		Cmd_SyncPositionData(pos, rot, time, id);
 	}
 
 	[Command(channel = 2)]
-	void Cmd_SyncPositionData (Vector3[] pos, int id)
+	void Cmd_SyncPositionData (Vector3[] pos, Quaternion[] rot, float[] time, int id)
 	{
-		Rpc_SnycPositionData(pos, id);
+		Rpc_SnycPositionData(pos, rot, time, id);
 	}
 
 	[ClientRpc(channel = 2)]
-	void Rpc_SnycPositionData (Vector3[] pos, int id)
+	void Rpc_SnycPositionData (Vector3[] pos, Quaternion[] rot, float[] time, int id)
 	{
 		if (isLocalPlayer)
 			return;
 
-		character.SetSyncData(pos, CalculateAverageTimeBetweenSnycs(), id);
+		character.SetSyncData(pos, rot, time, CalculateAverageTimeBetweenSnycs(), id);
 	}
 
 

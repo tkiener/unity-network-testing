@@ -2,13 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class SyncData {
-	public SyncData(Vector3 position)
-	{
-		this.position = position;
-	}
-
+public struct SyncData {
 	public Vector3 position;
+	public Quaternion rotation;
+	public float time;
 }
 
 public class WK_Character : MonoBehaviour {
@@ -22,6 +19,12 @@ public class WK_Character : MonoBehaviour {
 		}
 	}
 
+	public Quaternion rotation {
+		get {
+			return tr.rotation;
+		}
+	}
+
 	bool isLocalPlayer;
 
 	Transform tr;
@@ -31,6 +34,9 @@ public class WK_Character : MonoBehaviour {
 	{
 		tr = transform;
 		rb = GetComponent<Rigidbody>();
+
+
+		lastSyncData = new SyncData(){time = -1};
 	}
 
 	public void Init (bool isLocalPlayer)
@@ -63,21 +69,33 @@ public class WK_Character : MonoBehaviour {
 	float timeSinceLastDataSync = 0;
 	float estimatedTimeUntilNextSync = 999;
 	float timePerSyncPoint = 999;
-	public void SetSyncData (Vector3[] data, float syncTime, int id)
+	float originalNeededTime = 0;
+	public void SetSyncData (Vector3[] data, Quaternion[] rotation, float[] time, float syncTime, int id)
 	{
 		if (data.Length == 0)
 			return;
 
-		foreach (var d in data)
-			syncData.Enqueue(new SyncData(d));
+		for (int i = 0; i < data.Length; i++)
+			syncData.Enqueue(new SyncData(){
+				position = data[i],
+				rotation = rotation[i],
+				time = time[i]
+			});
 
+		if (lastSyncData.time == -1)
+		{
+			lastSyncData = syncData.Dequeue();
+			if (syncData.Count == 0)
+				return;
+		}
 
 		timeSinceLastDataSync = 0;
 		estimatedTimeUntilNextSync = syncTime * 1.2f;
 		timePerSyncPoint = estimatedTimeUntilNextSync / (syncData.Count - currentSyncLerpAlpha);
 
-
-		Debug.Log("Received message ID: " + id + " with syncTime: " + syncTime);
+		originalNeededTime = time[time.Length-1] - lastSyncData.time;
+		timePerSyncPoint = estimatedTimeUntilNextSync / originalNeededTime * (syncData.Peek().time - lastSyncData.time);
+		
 		if (id <= lastID)
 			Debug.LogError("Data out of order!");
 		lastID = id;
@@ -90,12 +108,8 @@ public class WK_Character : MonoBehaviour {
 	Vector3 targetSyncPosition;
 	void UpdateSyncPos()
 	{
-		if (lastSyncData == null)
-		{
-			if (syncData.Count == 0)
-				return;
-			lastSyncData = syncData.Dequeue();
-		}
+		if (lastSyncData.time == -1)
+			return;
 
 		timeSinceLastDataSync += Time.deltaTime;
 
@@ -104,6 +118,14 @@ public class WK_Character : MonoBehaviour {
 		{
 			currentSyncLerpAlpha -= 1;
 			lastSyncData = syncData.Dequeue();
+			if (syncData.Count > 0)
+			{
+				float oldTimePerSyncPoint = timePerSyncPoint;
+				timePerSyncPoint = estimatedTimeUntilNextSync / originalNeededTime * (syncData.Peek().time - lastSyncData.time);
+				currentSyncLerpAlpha *= oldTimePerSyncPoint / timePerSyncPoint;
+			}
+			else
+				timePerSyncPoint = 999;
 		}
 
 		if (syncData.Count == 0)
