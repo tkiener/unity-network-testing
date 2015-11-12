@@ -52,6 +52,7 @@ public class WK_Character : MonoBehaviour {
 //			gameObject.AddComponent<Debug_AutoMover>();
 			tr.parent = GameObject.Find ("Karussel").transform;
 			tr.localPosition = Vector3.right * 5;
+			rb.constraints = RigidbodyConstraints.None;
 		}
 	}
 
@@ -140,7 +141,7 @@ public class WK_Character : MonoBehaviour {
 
 //		tr.position = Vector3.Lerp(lastSyncData.position, syncData.Peek().position, currentSyncLerpAlpha);
 
-		rb.MoveRotation( Quaternion.Inverse(rb.rotation) * Quaternion.Slerp(lastSyncData.rotation, syncData.Peek().rotation, currentSyncLerpAlpha));
+		rb.MoveRotation( Quaternion.Slerp(lastSyncData.rotation, syncData.Peek().rotation, currentSyncLerpAlpha) );
 
 		targetSyncPosition = Vector3.Lerp(lastSyncData.position, syncData.Peek().position, currentSyncLerpAlpha);
 		rb.velocity = (targetSyncPosition - tr.position) / Time.deltaTime;
