@@ -101,8 +101,9 @@ public class WK_NetworkPlayer : NetworkBehaviour {
 
 			averageSyncTime = 0;
 			foreach(var t in syncTimes)
-				averageSyncTime += t;
-			averageSyncTime /= syncTimes.Count;
+				if (t > averageSyncTime)
+					averageSyncTime = t;
+//			averageSyncTime /= syncTimes.Count;
 		}
 
 		lastSyncTime = Time.timeSinceLevelLoad;
