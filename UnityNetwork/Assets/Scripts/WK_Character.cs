@@ -110,6 +110,7 @@ public class WK_Character : MonoBehaviour {
 		{
 			currentSyncLerpAlpha = 0;
 			tr.position = lastSyncData.position;
+			rb.velocity = Vector3.zero;
 			return;
 		}
 
