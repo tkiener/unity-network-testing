@@ -39,6 +39,8 @@ public class WK_NetworkPlayer : NetworkBehaviour {
 
 	[SerializeField] float positionsPerSecond = 10;
 	[SerializeField] float syncsPerSecond = 10;
+	[SerializeField, Range(0f, 1f)] float dataLossPercent = .2f;
+
 	IEnumerator SavePositionDataCo ()
 	{
 		while (true)
@@ -59,7 +61,9 @@ public class WK_NetworkPlayer : NetworkBehaviour {
 			if (positionData.Count == 0)
 				continue;
 
-			SyncPositionData(positionData.ToArray(), rotationData.ToArray(), timeData.ToArray(), id++);
+			if (Random.Range(0f, 1f) >= dataLossPercent)
+				SyncPositionData(positionData.ToArray(), rotationData.ToArray(), timeData.ToArray(), id++);
+
 			positionData.Clear();
 			rotationData.Clear();
 			timeData.Clear();
