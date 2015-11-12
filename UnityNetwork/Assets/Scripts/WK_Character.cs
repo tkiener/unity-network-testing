@@ -133,11 +133,14 @@ public class WK_Character : MonoBehaviour {
 			Debug.LogWarning("Reached final point: timeSinceLastDataSync " + timeSinceLastDataSync + " / estimatedTimeUntilNextSync " + estimatedTimeUntilNextSync);
 			currentSyncLerpAlpha = 0;
 			tr.position = lastSyncData.position;
+			tr.rotation = lastSyncData.rotation;
 			rb.velocity = Vector3.zero;
 			return;
 		}
 
 //		tr.position = Vector3.Lerp(lastSyncData.position, syncData.Peek().position, currentSyncLerpAlpha);
+
+		rb.rotation = Quaternion.Slerp(lastSyncData.rotation, syncData.Peek().rotation, currentSyncLerpAlpha);
 
 		targetSyncPosition = Vector3.Lerp(lastSyncData.position, syncData.Peek().position, currentSyncLerpAlpha);
 		rb.velocity = (targetSyncPosition - tr.position) / Time.deltaTime;
